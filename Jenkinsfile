@@ -28,7 +28,7 @@ pipeline {
         sh 'docker compose -f ./docker-compose.dev.yaml up -d --build'
         echo 'Cloning Robots'
         dir('./robot/') {
-          git branch: 'main', url: 'https://github.com/rratchapol/jenkins-assignment.git'
+          git branch: 'main', url: 'https://github.com/rratchapol/Robot-Test.git'
         }
         echo 'Running Robot'
         sh 'cd ./robot && python3 -m robot ./test-api.robot'
