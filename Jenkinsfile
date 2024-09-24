@@ -18,7 +18,8 @@ pipeline {
     stage('Run Unittest') {
       steps {
         sh 'whoami'
-        sh 'npm test'
+        // เรียกใช้การทดสอบโดยไม่เริ่มเซิร์ฟเวอร์จริง
+        sh 'npm test -- --runInBand --detectOpenHandles'
       }
     }
     stage('Run Robot') {
@@ -29,18 +30,18 @@ pipeline {
         dir('./robot/') {
           git branch: 'main', url: 'https://github.com/rratchapol/jenkins-assignment.git'
         }
-        echo 'Runing Robot'
+        echo 'Running Robot'
         sh 'cd ./robot && python3 -m robot ./test-api.robot'
       }
     }
     stage('Building Image ️') {
       steps {
-        sh 'docker build -t tao/jenkins-assingment:lastest .'
+        sh 'docker build -t tao/jenkins-assignment:latest .'
       }
     }
     stage('Push ⬆️') {
       steps {
-        sh 'docker push tao/jenkins-assingment:lastest'
+        sh 'docker push tao/jenkins-assignment:latest'
       }
     }
     stage('Clean Workspace') {
