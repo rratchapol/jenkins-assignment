@@ -22,19 +22,31 @@ pipeline {
         sh 'npm test -- --runInBand --detectOpenHandles'
       }
     }
+    // stage('Run Robot') {
+    //   steps {
+    //     echo 'Create Container'
+    //     // sh 'docker compose -f ./docker-compose.dev.yaml up -d --build'
+    //     sh 'docker-compose -f ./docker-compose.dev.yaml up -d --build'
+    //     echo 'Cloning Robots'
+    //     dir('./robot/') {
+    //       git branch: 'main', url: 'https://github.com/rratchapol/Robot-Test.git'
+    //     }
+    //     echo 'Running Robot'
+    //     sh 'cd ./robot && python3 -m robot ./test-api.robot'
+    //   }
+    // }
     stage('Run Robot') {
       steps {
         echo 'Create Container'
-        // sh 'docker compose -f ./docker-compose.dev.yaml up -d --build'
         sh 'docker-compose -f ./docker-compose.dev.yaml up -d --build'
         echo 'Cloning Robots'
         dir('./robot/') {
-          git branch: 'main', url: 'https://github.com/rratchapol/Robot-Test.git'
+            git branch: 'main', url: 'https://github.com/rratchapol/Robot-Test.git'
         }
         echo 'Running Robot'
-        sh 'cd ./robot && python3 -m robot ./test-api.robot'
-      }
-    }
+        sh 'source /home/test/workspace/ADMINTEST/venv/bin/activate && cd ./robot && python3 -m robot ./test-api.robot'
+     }
+  }
     stage('Building Image ️') {
       steps {
         sh 'docker build -t tao/jenkins-assignment:latest .'
