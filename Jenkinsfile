@@ -6,7 +6,7 @@ ipeline {
   stages {
     stage('Clone') {
       steps {
-        git branch: 'main', url: 'https://github.com/mmayyiisuay/Jenkins_Assignment.git'
+        git branch: 'main', url: 'https://github.com/rratchapol/jenkins-assignment.git'
         sh 'whoami'
       }
     }
@@ -27,7 +27,7 @@ ipeline {
         sh 'docker compose -f ./docker-compose.dev.yaml up -d --build'
         echo 'Cloning Robots'
         dir('./robot/') {
-          git branch: 'main', url: 'https://github.com/softdev-practice-kmitl/Jenkins_Robot.git'
+          git branch: 'main', url: 'https://github.com/rratchapol/jenkins-assignment.git'
         }
         echo 'Runing Robot'
         sh 'cd ./robot && python3 -m robot ./test-api.robot'
@@ -35,12 +35,12 @@ ipeline {
     }
     stage('Building Image ️') {
       steps {
-        sh 'docker build -t mmayyiisuay/jenkins-assingment:lastest .'
+        sh 'docker build -t tao/jenkins-assingment:lastest .'
       }
     }
     stage('Push ⬆️') {
       steps {
-        sh 'docker push mmayyiisuay/jenkins-assingment:lastest'
+        sh 'docker push tao/jenkins-assingment:lastest'
       }
     }
     stage('Clean Workspace') {
