@@ -1,4 +1,4 @@
-pipeline {
+ipeline {
   agent {
     label 'vm2'
   }
@@ -6,7 +6,7 @@ pipeline {
   stages {
     stage('Clone') {
       steps {
-        git branch: 'main', url: 'https://github.com/rratchapol/jenkins-assignment.git'
+        git branch: 'main', url: 'https://github.com/mmayyiisuay/Jenkins_Assignment.git'
         sh 'whoami'
       }
     }
@@ -17,6 +17,7 @@ pipeline {
     }
     stage('Run Unittest') {
       steps {
+        sh 'whoami'
         sh 'npm test'
       }
     }
@@ -24,43 +25,37 @@ pipeline {
       steps {
         echo 'Create Container'
         sh 'docker compose -f ./docker-compose.dev.yaml up -d --build'
-        
         echo 'Cloning Robots'
         dir('./robot/') {
-          git branch: 'main', url: 'https://github.com/rratchapol/Robot-Test.git'
+          git branch: 'main', url: 'https://github.com/softdev-practice-kmitl/Jenkins_Robot.git'
         }
-        
-        echo 'Running Robot Test'
+        echo 'Runing Robot'
         sh 'cd ./robot && python3 -m robot ./test-api.robot'
       }
     }
-    stage('Build Docker Image') {
+    stage('Building Image ️') {
       steps {
-        sh 'docker build -t tao/jenkins-assignment:latest .'
+        sh 'docker build -t mmayyiisuay/jenkins-assingment:lastest .'
       }
     }
-    stage('Push Image to Registry') {
+    stage('Push ⬆️') {
       steps {
-        sh 'docker push tao/jenkins-assignment:latest'
+        sh 'docker push mmayyiisuay/jenkins-assingment:lastest'
       }
     }
     stage('Clean Workspace') {
       steps {
-        echo 'Stopping and Cleaning Containers'
+        echo 'DownTime'
         sh 'docker compose -f ./docker-compose.dev.yaml down'
         sh 'docker system prune -a -f'
       }
     }
-    stage('Deploy to Preprod') {
+    stage('Running Preprod') {
       agent {
         label 'vm3'
       }
       steps {
-        echo 'Pulling and Deploying on Preprod'
-        sh 'docker pull tao/jenkins-assignment:latest'
-        sh 'docker compose down'
-        sh 'docker system prune -a -f'
-        sh 'docker compose up -d --build'
+        sh 'docker compose down && docker system prune -a -f && docker compose up -d --build'
       }
     }
   }
